@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
+import { Network } from '../network';
 
 @Component({
   selector: 'app-server-node',
@@ -7,5 +8,11 @@ import { Component, Input } from '@angular/core';
   styleUrl: './server-node.scss'
 })
 export class ServerNode {
-  @Input() name : String = "default";
+  @Input() name : string = "default";
+
+  constructor(@Inject(Network) private network: Network) {
+    this.network.join(this.name, this);
+  }
+
+
 }
