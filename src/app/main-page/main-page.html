@@ -1,5 +1,7 @@
 <p>main-page works!</p>
 
+<button (click)="addNode()">Add Node</button>
+
 @for (name of nodes; track name) {
     <app-server-node
                     id="{{ name }}"
