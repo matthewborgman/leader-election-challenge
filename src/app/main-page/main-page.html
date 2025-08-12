@@ -1,0 +1,8 @@
+<p>main-page works!</p>
+
+@for (name of nodes; track name) {
+    <app-server-node
+                    id="{{ name }}"
+                    [name]="name">
+    </app-server-node>
+}
