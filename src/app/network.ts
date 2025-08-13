@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServerNode } from './server-node/server-node';
-import { Message } from './message';
+import { Message, MessageType } from './message';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +20,17 @@ export class Network {
   broadcast(message: Message) {
     for (const name of this.connectedNodes.keys()) {
       if (name != message.senderName) {
-        this.networkSend(message.senderName, name, message);
+        this.networkCast(message.senderName, name, message);
       }
     }
+  }
+
+  sendCast(from: string, to: string, message: Message): void {
+    this.networkCast(from, to, message);
+  }
+
+  async sendCall(from: string, to: string, message: Message): Promise<Message> {
+    return this.networkCall(from, to, message);
   }
 
   partitionNetwork(): boolean {
@@ -36,7 +44,7 @@ export class Network {
         this.partitionedNodes.push(next.value);
       }
     }
-    
+
     return true;
   }
 
@@ -53,13 +61,30 @@ export class Network {
     this.offlineNodes.push(name);
   }
 
-  private networkSend(from: string, to: string, message: Message) {
+  private networkCast(from: string, to: string, message: Message): void {
     if (this.canCommunicate(from, to)) {
       const targetNode = this.connectedNodes.get(to);
       if (targetNode) {
-        this.networkDelay(() => targetNode.receiveSend(message));
+        this.networkDelay(() => targetNode.receiveCast(message));
       }
     }
+  }
+
+  private async networkCall(from: string, to: string, message: Message): Promise<Message> {
+    const promise = new Promise<Message>((resolve, reject) => {
+      if (this.canCommunicate(from, to)) {
+        const targetNode = this.connectedNodes.get(to);
+        if (targetNode) {
+          this.networkDelay(() => {
+            const response = targetNode.receiveCall(message);
+            resolve(response);
+          });
+        }
+      } else {
+        reject("Not Found");
+      }
+    });
+    return promise;
   }
 
   private canCommunicate(from: string, to: string) {

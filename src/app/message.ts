@@ -1,5 +1,7 @@
 export enum MessageType {
-    NewMember
+    NewMember,
+    CoolStoryBro,
+    JustSayinHello
 }
 
 export class Message {
