@@ -2,9 +2,18 @@
 
 <button (click)="addNode()">Add Node</button>
 
-@for (name of nodes; track name) {
+@if(partition) {
+  <button (click)="healPartition()">Heal Network Partition</button>
+} @else {
+  <button (click)="networkPartition()">Partition Network</button>
+}
+
+@for (name of nodes; track name;) {
     <app-server-node
                     id="{{ name }}"
                     [name]="name">
     </app-server-node>
+    @if ($index == 1 && partition) {
+        <div class="divider">=========================================================================</div>
+    }
 }

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ServerNode } from '../server-node/server-node';
+import { Network } from '../network';
 
 @Component({
   selector: 'app-main-page',
@@ -9,7 +10,11 @@ import { ServerNode } from '../server-node/server-node';
 })
 export class MainPage {
 
-  nodes: string[] = []
+    constructor(@Inject(Network) private network: Network) {}
+
+  nodes: string[] = [];
+
+  partition: boolean = false;
 
   private nodeNames: string[] = [
     'Alfa',
@@ -45,5 +50,14 @@ export class MainPage {
     if (newNode) {
       this.nodes.push(newNode);
     }
+  }
+
+  networkPartition() {
+    this.partition = this.network.partitionNetwork();
+  }
+
+  healPartition() {
+    this.partition = false;
+    this.network.healPartition();
   }
 }
