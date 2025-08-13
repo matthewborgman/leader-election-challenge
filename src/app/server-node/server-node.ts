@@ -10,15 +10,29 @@ import { Message, MessageType } from '../message';
 })
 export class ServerNode {
 
-  @Input() name : string = "default";
+  @Input() name: string = "default";
 
-  constructor(@Inject(Network) private network: Network) {
+  leader: string = "Unknown";
+  color: string = "green";
+  info: string = "Hello World!";
+
+  constructor(@Inject(Network) private network: Network) {}
+
+  receiveSend(message: Message) {
+    if (message.message == MessageType.NewMember) {
+      this.handleNewMember(message);
+    }
+  }
+
+  ngOnInit() {
+    this.leader = this.name;
     this.network.join(this.name, this);
     this.network.broadcast(new Message(this.name, MessageType.NewMember));
   }
 
-  receiveSend(message: Message) {
-    throw new Error('Method not implemented.');
+  private handleNewMember(message: Message) {
+    this.leader = message.senderName;
   }
 
 }
+
