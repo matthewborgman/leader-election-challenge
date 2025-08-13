@@ -15,6 +15,7 @@ export class ServerNode {
   leader: string = "Unknown";
   color: string = "green";
   info: string = "Hello World!";
+  isOnline: boolean = true;
 
   constructor(@Inject(Network) private network: Network) {}
 
@@ -22,6 +23,22 @@ export class ServerNode {
     if (message.message == MessageType.NewMember) {
       this.handleNewMember(message);
     }
+  }
+
+  offline() {
+    this.isOnline = false;
+    this.network.goOffline(this.name);
+    this.leader = "Unknown";
+    this.color = "grey";
+    this.info = "Went Offline";
+  }
+
+  online() {
+    this.isOnline = true;
+    this.network.goOnline(this.name);
+    this.leader = this.name;
+    this.color = "green";
+    this.info = "Back Online";
   }
 
   ngOnInit() {

@@ -8,4 +8,11 @@
     <div class="data-element">
         Info: {{info}}
     </div>
+    <div class="data-element">
+        @if (isOnline) {
+            <button (click)="offline()">Go Offline</button>
+        } @else {
+            <button (click)="online()">Go Online</button>
+        }
+    </div>
 </div>

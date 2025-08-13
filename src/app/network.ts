@@ -11,6 +11,7 @@ export class Network {
 
   private connectedNodes: Map<string, ServerNode> = new Map();
   private partitionedNodes: string[] = [];
+  private offlineNodes: string[] = [];
 
   join(name: string, node: ServerNode) {
     this.connectedNodes.set(name, node);
@@ -43,6 +44,15 @@ export class Network {
     this.partitionedNodes = [];
   }
 
+  goOnline(name: string) {
+    const index = this.offlineNodes.indexOf(name);
+    this.offlineNodes.splice(index, 1);
+  }
+
+  goOffline(name: string) {
+    this.offlineNodes.push(name);
+  }
+
   private networkSend(from: string, to: string, message: Message) {
     if (this.canCommunicate(from, to)) {
       const targetNode = this.connectedNodes.get(to);
@@ -56,11 +66,18 @@ export class Network {
     if (this.differentPartitions(from, to)) {
       return false;
     }
+    if (this.isOffline(to)) {
+      return false;
+    }
     return true;
   }
 
   private differentPartitions(from: string, to: string): boolean {
     return this.partitionedNodes.includes(from) != this.partitionedNodes.includes(to);
+  }
+
+  private isOffline(name: string): boolean {
+    return this.offlineNodes.indexOf(name) > -1;
   }
 
   private networkDelay(fun: () => any): void {
