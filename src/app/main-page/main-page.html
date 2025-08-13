@@ -8,12 +8,20 @@
   <button (click)="networkPartition()">Partition Network</button>
 }
 
+
+<div [class.node-container] = !partition [class.node-container-partitioned] = partition >
+
+
+
 @for (name of nodes; track name;) {
     <app-server-node
                     id="{{ name }}"
                     [name]="name">
     </app-server-node>
     @if ($index == 1 && partition) {
-        <div class="divider">=========================================================================</div>
+        <div class="divider"></div>
+        <div class="divider"></div>
     }
 }
+
+</div>
