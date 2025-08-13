@@ -1,4 +1,19 @@
-<p>main-page works!</p>
+<h2>Leader Election Challenge</h2>
+
+<p>The goal of this exercise is to implement a better leader election algorithm. The current algorithm works if nodes
+  never go offline and the network is always reliable. This is never true in the real world, and can easily get into
+  a broken state where the cluster runs forever and does not agree on a leader.
+</p>
+
+<h3>Objectives</h3>
+
+<ul>
+  <li>All online nodes eventually agree on a leader node</li>
+  <li>If the leader goes offline, a new leader node is eventually elected</li>
+  <li>During a network partition, a new leader is only elected if a majority of the nodes agree</li>
+  <li>When a network partition heals all nodes eventually agree on the leader again</li>
+  <li>New nodes joining the cluster accept the current leader or trigger a leader election</li>
+</ul>
 
 <button (click)="addNode()">Add Node</button>
 
