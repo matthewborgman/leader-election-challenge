@@ -1,42 +1,58 @@
-<h2>Leader Election Challenge</h2>
 
-<p>The goal of this exercise is to implement a better leader election algorithm. The current algorithm works if nodes
-  never go offline and the network is always reliable. This is never true in the real world, and can easily get into
-  a broken state where the cluster runs forever and does not agree on a leader.
-</p>
+<h2 style="cursor:pointer; user-select:none;" (click)="collapsedTitle = !collapsedTitle">
+  Leader Election Challenge
+  <span style="font-size:0.8em;">{{ !collapsedTitle ? '▼' : '▲' }}</span>
+</h2>
+@if (!collapsedTitle) {
+  <p>The goal of this exercise is to implement a better leader election algorithm. The current algorithm works if nodes
+    never go offline and the network is always reliable. This is never true in the real world, and can easily get into
+    a broken state where the cluster runs forever and does not agree on a leader.
+  </p>
+}
 
-<h3>Objectives</h3>
 
-<ul>
-  <li>All online nodes eventually agree on a leader node</li>
-  <li>If the leader goes offline, a new leader node is eventually elected</li>
-  <li>During a network partition, a new leader is only elected if a majority of the total nodes agree</li>
-  <li>When a network partition heals all nodes eventually agree on the leader again</li>
-  <li>New nodes joining the cluster accept the current leader or trigger a leader election</li>
-</ul>
 
-<h3>Guidelines / Information</h3>
+<h3 style="cursor:pointer; user-select:none;" (click)="collapsedObjectives = !collapsedObjectives">
+  Objectives
+  <span style="font-size:0.8em;">{{ !collapsedObjectives ? '▼' : '▲' }}</span>
+</h3>
+@if (!collapsedObjectives) {
+  <ul>
+    <li>All online nodes eventually agree on a leader node</li>
+    <li>If the leader goes offline, a new leader node is eventually elected</li>
+    <li>During a network partition, a new leader is only elected if a majority of the total nodes agree</li>
+    <li>When a network partition heals all nodes eventually agree on the leader again</li>
+    <li>New nodes joining the cluster accept the current leader or trigger a leader election</li>
+  </ul>
+}
 
-<ul>
-  <li>All code modifications should be isolated to the following:</li>
-  <ol>
-    <li>src/app/server-node Component</li>
-    <li>src/app/message.ts MessageType and Message</li>
-  </ol>
-  <li>All calls to the network introduce a randomized delay to simulate the network having latency (1-100ms)</li>
-  <li>Nodes that are offline or on the other side of a partition are considered unreachable through the network, and messages will not be delivered.</li>
-  <li>There are 3 functions on the network service to use for communication between nodes:</li>
-  <ol>
-    <li>broadcast - this will attempt to send a message to all other nodes on the network. Unreachable nodes will not receive the message, but no failures will be returned.</li>
-    <li>sendCast - this will attempt to send a message to one node on the network. Unreachable nodes will not receive the message, but no failure will be returned.</li>
-    <li>sendCall - this will send a message to one node and wait for a response message to be returned. Unreachable nodes will not receive the message, and an error will be returned after the network delay.</li>
-  </ol>
-  <li>Due to the Angular component lifecycle, Inputs are not populated when the constructor is executed. Therefore, initialization calls are made in ngOnInit in server-node to guarantee the node name Input has been populated when they run.</li>
-  <li>Feel free to remove or replace the call to generateSomeTraffic in the initialization of server-node, that code is there for example purposes and to show how the
-    info variable can be used to display information
-  </li>
-  <li>The network service depends on the methods receiveCast and receiveCall to exist in server-node, you are expected to modify them but not remove them</li>
-</ul>
+
+<h3 style="cursor:pointer; user-select:none;" (click)="collapsedGuidelines = !collapsedGuidelines">
+  Guidelines / Information
+  <span style="font-size:0.8em;">{{ !collapsedGuidelines ? '▼' : '▲' }}</span>
+</h3>
+@if (!collapsedGuidelines) {
+  <ul>
+    <li>All code modifications should be isolated to the following:</li>
+    <ol>
+      <li>src/app/server-node Component</li>
+      <li>src/app/message.ts MessageType and Message</li>
+    </ol>
+    <li>All calls to the network introduce a randomized delay to simulate the network having latency (1-100ms)</li>
+    <li>Nodes that are offline or on the other side of a partition are considered unreachable through the network, and messages will not be delivered.</li>
+    <li>There are 3 functions on the network service to use for communication between nodes:</li>
+    <ol>
+      <li>broadcast - this will attempt to send a message to all other nodes on the network. Unreachable nodes will not receive the message, but no failures will be returned.</li>
+      <li>sendCast - this will attempt to send a message to one node on the network. Unreachable nodes will not receive the message, but no failure will be returned.</li>
+      <li>sendCall - this will send a message to one node and wait for a response message to be returned. Unreachable nodes will not receive the message, and an error will be returned after the network delay.</li>
+    </ol>
+    <li>Due to the Angular component lifecycle, Inputs are not populated when the constructor is executed. Therefore, initialization calls are made in ngOnInit in server-node to guarantee the node name Input has been populated when they run.</li>
+    <li>Feel free to remove or replace the call to generateSomeTraffic in the initialization of server-node, that code is there for example purposes and to show how the
+      info variable can be used to display information
+    </li>
+    <li>The network service depends on the methods receiveCast and receiveCall to exist in server-node, you are expected to modify them but not remove them</li>
+  </ul>
+}
 
 <button (click)="addNode()">Add Node</button>
 

@@ -10,7 +10,11 @@ import { Network } from '../network';
 })
 export class MainPage {
 
-    constructor(@Inject(Network) private network: Network) {}
+  collapsedTitle: boolean = false;
+  collapsedObjectives: boolean = false;
+  collapsedGuidelines: boolean = false;
+
+  constructor(@Inject(Network) private network: Network) { }
 
   nodes: string[] = [];
 
