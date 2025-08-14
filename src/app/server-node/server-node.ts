@@ -60,7 +60,7 @@ export class ServerNode {
 
   private generateSomeTraffic() {
     const delay = Math.floor(Math.random() * this.MAX_TRAFFIC_DELAY) + 1;
-    const fun = (delay % 2) !? this.randomCall(this) : this.randomCast(this);
+    const fun = (delay % 2) ? this.randomCall(this) : this.randomCast(this);
     setTimeout(fun, delay);
   }
 
