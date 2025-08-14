@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ServerNode } from './server-node/server-node';
+import { ServerNodeBase } from './server-node/server-node';
 import { Message, MessageType } from './message';
 
 @Injectable({
@@ -9,11 +9,11 @@ export class Network {
 
   private MAX_NETWORK_DELAY: number = 100;
 
-  private connectedNodes: Map<string, ServerNode> = new Map();
+  private connectedNodes: Map<string, ServerNodeBase> = new Map();
   private partitionedNodes: string[] = [];
   private offlineNodes: string[] = [];
 
-  join(name: string, node: ServerNode) {
+  join(name: string, node: ServerNodeBase) {
     this.connectedNodes.set(name, node);
   }
 

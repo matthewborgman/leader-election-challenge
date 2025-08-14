@@ -2,13 +2,37 @@ import { Component, Inject, Input } from '@angular/core';
 import { Network } from '../network';
 import { Message, MessageType } from '../message';
 
+
+export abstract class ServerNodeBase {
+
+  abstract name: string;
+
+  constructor(protected network: Network) {}
+
+  abstract receiveCast(message: Message): void;
+  abstract receiveCall(message: Message): Message;
+
+  offline() {
+    this.network.goOffline(this.name);
+  }
+
+  online() {
+    this.network.goOnline(this.name);
+  }
+
+  onInit() {
+    this.network.join(this.name, this);
+  }
+
+}
+
 @Component({
   selector: 'app-server-node',
   imports: [],
   templateUrl: './server-node.html',
   styleUrl: './server-node.scss'
 })
-export class ServerNode {
+export class ServerNode extends ServerNodeBase {
 
   @Input() name: string = "default";
 
@@ -19,7 +43,9 @@ export class ServerNode {
 
   private MAX_TRAFFIC_DELAY: number = 15000;
 
-  constructor(@Inject(Network) private network: Network) {}
+  constructor(@Inject(Network) override network: Network) {
+    super(network);
+  }
 
   receiveCast(message: Message) {
     if (message.message == MessageType.NewMember) {
@@ -35,7 +61,8 @@ export class ServerNode {
     return responseMessage;
   }
 
-  offline() {
+ override offline() {
+    super.offline();
     this.isOnline = false;
     this.network.goOffline(this.name);
     this.leader = "Unknown";
@@ -43,7 +70,8 @@ export class ServerNode {
     this.info = "Went Offline";
   }
 
-  online() {
+  override online() {
+    super.online();
     this.isOnline = true;
     this.network.goOnline(this.name);
     this.leader = this.name;
@@ -51,9 +79,9 @@ export class ServerNode {
     this.info = "Back Online";
   }
 
-  ngOnInit() {
+   ngOnInit() {
+    super.onInit();
     this.leader = this.name;
-    this.network.join(this.name, this);
     this.network.broadcast(new Message(this.name, MessageType.NewMember));
     this.generateSomeTraffic();
   }
