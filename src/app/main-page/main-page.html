@@ -15,6 +15,24 @@
   <li>New nodes joining the cluster accept the current leader or trigger a leader election</li>
 </ul>
 
+<h3>Guidelines / Information</h3>
+
+<ul>
+  <li>All code modifications should be made to the server-node component, message class, and message type enum, no updates to the main-page or network service</li>
+  <li>All calls to the network introduce a randomized delay to simulate the network having latency</li>
+  <li>There are 3 functions on the network service to use for communication between nodes:</li>
+  <ol>
+    <li>broadcast - this will attempt to send a message to all nodes on the network. It will fail to reach offline nodes and nodes on the other side of a network partition</li>
+    <li>sendCast - this will attempt to send a message to one node on the network. No failure will be returned but it will not get the message to offline or unreachable nodes</li>
+    <li>sendCall - this will send a message to one node and wait for a message to be returned. If the target node is offline or unreachable it will return an error</li>
+  </ol>
+  <li>The reason initialization calls are made in ngOnInit in server-node is to guarentee the node name input has been populated when it runs</li>
+  <li>Feel free to remove or replace the call to generateSomeTraffic in the initialization of server-node, that code is there for example purposes and to show how the
+    info variable can be used to display information
+  </li>
+  <li>The network service depends on the methods receiveCast and receiveCall to exist in server-node, you are expected to modify them but not remove them</li>
+</ul>
+
 <button (click)="addNode()">Add Node</button>
 
 @if(partition) {
