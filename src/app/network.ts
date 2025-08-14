@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ServerNodeBase } from './server-node/server-node';
+import { ServerNodeBase } from './server-node-base'
 import { Message, MessageType } from './message';
 
 @Injectable({

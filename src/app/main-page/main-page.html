@@ -35,22 +35,21 @@
   <ul>
     <li>All code modifications should be isolated to the following:</li>
     <ol>
-      <li>src/app/server-node Component (do not modify the ServerNodeBase class)</li>
+      <li>src/app/server-node Component</li>
       <li>src/app/message.ts MessageType and Message</li>
     </ol>
-    <li>All calls to the network introduce a randomized delay to simulate the network having latency (1-100ms)</li>
-    <li>Nodes that are offline or on the other side of a partition are considered unreachable through the network, and messages will not be delivered.</li>
-    <li>There are 3 functions on the network service to use for communication between nodes:</li>
+    <li>Nodes that are offline or on the other side of a partition are considered unreachable, and messages will not be delivered.</li>
+    <li>There are 3 functions used for communication between nodes:</li>
     <ol>
-      <li>broadcast - this will attempt to send a message to all other nodes on the network. Unreachable nodes will not receive the message, but no failures will be returned.</li>
-      <li>sendCast - this will attempt to send a message to one node on the network. Unreachable nodes will not receive the message, but no failure will be returned.</li>
-      <li>sendCall - this will send a message to one node and wait for a response message to be returned. Unreachable nodes will not receive the message, and an error will be returned after the network delay.</li>
+      <li><b>broadcast</b> - this will attempt to send a message to all other nodes on the network. Unreachable nodes will not receive the message, but no failures will be returned.</li>
+      <li><b>sendCast</b> - this will attempt to send a message to one node on the network. Unreachable nodes will not receive the message, but no failure will be returned.</li>
+      <li><b>sendCall</b> - this will send a message to one node and wait for a response message to be returned. Unreachable nodes will not receive the message, and an error will be returned after the network delay.</li>
     </ol>
-    <li>Due to the Angular component lifecycle, Inputs are not populated when the constructor is executed. Therefore, initialization calls are made in ngOnInit in server-node to guarantee the node name Input has been populated when they run.</li>
+    <li>All messages sent have a randomized delay to simulate network latency (1-100ms)</li>
+    <li>Due to the Angular component lifecycle, put initialization code in the server-node onInit() method.</li>
     <li>Feel free to remove or replace the call to generateSomeTraffic in the initialization of server-node, that code is there for example purposes and to show how the
       info variable can be used to display information
     </li>
-    <li>The network service depends on the methods receiveCast and receiveCall to exist in server-node, you are expected to modify them but not remove them</li>
   </ul>
 }
 
@@ -69,7 +68,7 @@
 
 @for (name of nodes; track name;) {
     <app-server-node
-                    id="{{ name }}"
+                    id="app-server-node-{{ name }}"
                     [name]="name">
     </app-server-node>
     @if ($index == 1 && partition) {

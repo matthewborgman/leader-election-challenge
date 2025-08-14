@@ -1,30 +1,6 @@
-import { Component, Inject, Input } from '@angular/core';
-import { Network } from '../network';
+import { Component, Input } from '@angular/core';
 import { Message, MessageType } from '../message';
-
-
-export abstract class ServerNodeBase {
-
-  abstract name: string;
-
-  constructor(protected network: Network) {}
-
-  abstract receiveCast(message: Message): void;
-  abstract receiveCall(message: Message): Message;
-
-  offline() {
-    this.network.goOffline(this.name);
-  }
-
-  online() {
-    this.network.goOnline(this.name);
-  }
-
-  onInit() {
-    this.network.join(this.name, this);
-  }
-
-}
+import { ServerNodeBase } from '../server-node-base';
 
 @Component({
   selector: 'app-server-node',
@@ -39,13 +15,8 @@ export class ServerNode extends ServerNodeBase {
   leader: string = "Unknown";
   color: string = "green";
   info: string = "Hello World!";
-  isOnline: boolean = true;
 
   private MAX_TRAFFIC_DELAY: number = 15000;
-
-  constructor(@Inject(Network) override network: Network) {
-    super(network);
-  }
 
   receiveCast(message: Message) {
     if (message.message == MessageType.NewMember) {
@@ -61,28 +32,21 @@ export class ServerNode extends ServerNodeBase {
     return responseMessage;
   }
 
- override offline() {
-    super.offline();
-    this.isOnline = false;
-    this.network.goOffline(this.name);
+  onOffline() {
     this.leader = "Unknown";
     this.color = "grey";
     this.info = "Went Offline";
   }
 
-  override online() {
-    super.online();
-    this.isOnline = true;
-    this.network.goOnline(this.name);
+  onOnline() {
     this.leader = this.name;
     this.color = "green";
     this.info = "Back Online";
   }
 
-   ngOnInit() {
-    super.onInit();
+  onInit() {
     this.leader = this.name;
-    this.network.broadcast(new Message(this.name, MessageType.NewMember));
+    this.broadcast(new Message(this.name, MessageType.NewMember));
     this.generateSomeTraffic();
   }
 
@@ -94,7 +58,7 @@ export class ServerNode extends ServerNodeBase {
 
   private randomCall(self: this) : Function {
     return () => {
-      const response = self.network.sendCall(self.name, self.leader, new Message(self.name, MessageType.JustSayinHello)).then(response => {
+      const response = self.sendCall(self.leader, new Message(self.name, MessageType.JustSayinHello)).then(response => {
         self.info = `Called ${self.leader} and they said ${MessageType[response.message]}`;
       });
       self.generateSomeTraffic();
@@ -103,7 +67,7 @@ export class ServerNode extends ServerNodeBase {
 
   private randomCast(self: this): Function {
     return () => {
-      self.network.sendCast(self.name, self.leader, new Message(self.name, MessageType.JustSayinHello));
+      self.sendCast(self.leader, new Message(self.name, MessageType.JustSayinHello));
       self.generateSomeTraffic();
     }
   }
