@@ -91,7 +91,7 @@ export class Network {
     if (this.differentPartitions(from, to)) {
       return false;
     }
-    if (this.isOffline(to)) {
+    if (this.isOffline(to) || this.isOffline(from)) {
       return false;
     }
     return true;
